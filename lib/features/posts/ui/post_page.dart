@@ -36,7 +36,31 @@ class _PostPageState extends State<PostPage> {
         listenWhen: (previous, current) => current is PostActionState,
         buildWhen: (previous, current) => current is! PostActionState,
         listener: (context, state) {
-          // TODO: implement listener
+          if (state is PostAddSuccess) {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text("Post Added Successfully"),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('OK'))
+                ],
+              ),
+            );
+          } else if (state is PostAddFailure) {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text("Post Add Failed"),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('OK'))
+                ],
+              ),
+            );
+          }
         },
         builder: (context, state) {
           switch (state.runtimeType) {
@@ -70,15 +94,6 @@ class _PostPageState extends State<PostPage> {
                     style:
                         TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               );
-            // case PostAddSuccess:
-            //   return AlertDialog(
-            //     title: const Text("Post Added Successfully"),
-            //     actions: [
-            //       TextButton(
-            //           onPressed: () => Navigator.pop(context),
-            //           child: const Text('OK'))
-            //     ],
-            //   );
             default:
               return const SizedBox();
           }

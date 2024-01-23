@@ -28,11 +28,11 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
       PostsAddEvent event, Emitter<PostsState> emit) async {
     bool success = await PostRepo.postData();
     print(success);
-    // emit(success ? PostAddSuccess() : PostAddFailure());
-    if (success) {
-      emit(PostAddSuccess());
-    } else {
-      emit(PostAddFailure());
-    }
+    emit(success ? PostAddSuccess() : PostAddFailure());
+    // if (success) {
+    //   emit(PostAddSuccess());
+    // } else {
+    //   emit(PostAddFailure());
+    // }
   }
 }
