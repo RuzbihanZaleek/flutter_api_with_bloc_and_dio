@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_api_request_with_bloc_and_dio/features/cart/ui/cart.dart';
 import 'package:flutter_api_request_with_bloc_and_dio/features/posts/bloc/posts_bloc.dart';
+import 'package:flutter_api_request_with_bloc_and_dio/features/posts/ui/product_tile_widget.dart';
+import 'package:flutter_api_request_with_bloc_and_dio/features/wishlist/ui/wishlist.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostPage extends StatefulWidget {
@@ -22,14 +25,29 @@ class _PostPageState extends State<PostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Post Page"),
-        backgroundColor: Colors.blue,
+        title: const Text("Post Page", style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.teal,
+        actions: [
+          IconButton(
+              onPressed: () {
+                postsBloc.add(PostWishlistButtonNavigateClickedEvent());
+              },
+              icon: const Icon(Icons.favorite_border_outlined),
+              color: Colors.white),
+          IconButton(
+              onPressed: () {
+                postsBloc.add(PostCartButtonNavigateClickedEvent());
+              },
+              icon: const Icon(Icons.shopping_bag_outlined),
+              color: Colors.white),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
+        backgroundColor: Colors.teal,
         onPressed: () {
           postsBloc.add(PostsAddEvent());
         },
+        child: const Icon(Icons.add, color: Colors.white),
       ),
       body: BlocConsumer<PostsBloc, PostsState>(
         bloc: postsBloc,
@@ -60,6 +78,18 @@ class _PostPageState extends State<PostPage> {
                 ],
               ),
             );
+          } else if (state is PostNavigateToWishlistPageActionState) {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const Wishlist()));
+          } else if (state is PostNavigateToCartPageActionState) {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => const Cart()));
+          } else if (state is PostWishListItemAddedActionState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Item added to the wishlist")));
+          } else if (state is PostCartItemAddedActionState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Item added to the cart")));
           }
         },
         builder: (context, state) {
@@ -73,20 +103,9 @@ class _PostPageState extends State<PostPage> {
               return ListView.builder(
                   itemCount: successState.posts.length,
                   itemBuilder: (context, index) {
-                    return Container(
-                      padding: const EdgeInsets.all(16),
-                      margin: const EdgeInsets.all(16),
-                      color: Colors.grey.shade200,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(successState.posts[index].title,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
-                          Text(successState.posts[index].body),
-                        ],
-                      ),
-                    );
+                    return ProductTileWidget(
+                        postDataUiModel: successState.posts[index],
+                        postsBloc: postsBloc);
                   });
             case PostFetchingErrorState:
               return const Center(

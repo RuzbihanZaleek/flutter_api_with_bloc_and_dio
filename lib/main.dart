@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_api_request_with_bloc_and_dio/features/posts/ui/post_page.dart';
 
-import 'features/home/home_page.dart';
-
 void main() async {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

@@ -20,3 +20,11 @@ class PostFetchingSuccess extends PostsState {
 class PostAddSuccess extends PostActionState {}
 
 class PostAddFailure extends PostActionState {}
+
+class PostNavigateToWishlistPageActionState extends PostActionState {}
+
+class PostNavigateToCartPageActionState extends PostActionState {}
+
+class PostWishListItemAddedActionState extends PostActionState {}
+
+class PostCartItemAddedActionState extends PostActionState {}
